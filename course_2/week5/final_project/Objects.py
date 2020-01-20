@@ -11,6 +11,14 @@ def create_sprite(img, sprite_size):
     return sprite
 
 
+class AbstractObject(ABC):
+    def __init__(self):
+        pass
+    
+    def draw(self, display):
+        pass
+
+
 class Interactive(ABC):
 
     @abstractmethod
@@ -130,7 +138,10 @@ class Effect(Hero):
 class Enemy(Creature, Interactive):
     
     def __init__(self, icon, stats, xp, position):
-        pass
+        self.sprite = icon
+        self.stats = stats
+        self.xp = xp
+        self.position = position
     
     def interact(self, engine, hero):
         return super().interact(engine, hero)
@@ -139,4 +150,4 @@ class Enemy(Creature, Interactive):
 class Berserk:
     
     def apply_effect(self):
-        pass
+        print("Berserk: apply_effect")
