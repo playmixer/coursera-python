@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import pygame
 import random
+import Service
 
 
 def create_sprite(img, sprite_size):
@@ -12,11 +13,13 @@ def create_sprite(img, sprite_size):
 
 
 class AbstractObject(ABC):
+    
+    @abstractmethod
     def __init__(self):
         pass
     
     def draw(self, display):
-        pass
+        display.draw_object(self.sprite, self.position)
 
 
 class Interactive(ABC):
@@ -66,7 +69,7 @@ class Hero(Creature):
             self.stats["strength"] += 2
             self.stats["endurance"] += 2
             self.calc_max_HP()
-            self.hp = self.max_hp
+            self.hp = self.max_hp    
 
 
 class Effect(Hero):
@@ -137,17 +140,52 @@ class Effect(Hero):
 # add classes
 class Enemy(Creature, Interactive):
     
-    def __init__(self, icon, stats, xp, position):
+    def __init__(self, icon, stats, exp, position):
         self.sprite = icon
         self.stats = stats
-        self.xp = xp
+        self.exp = exp
         self.position = position
+        self.action = Service.add_gold
+        self.calc_max_HP()
+        self.hp = self.max_hp
     
     def interact(self, engine, hero):
-        return super().interact(engine, hero)
+        hit = random.getrandbits(1)
+        if hit < 0:
+            hero.hp -= self.stats["strength"]
+        if hero.hp <= 0:
+            engine.notify("GG")
+            engine.game_process = False
+        else:
+            hero.exp += self.exp
+            for mes in hero.level_up():
+                engine.notify(mes)
+                
+            self.action(engine, hero)
     
     
-class Berserk:
+class Berserk(Effect):
     
     def apply_effect(self):
-        print("Berserk: apply_effect")
+        self.hp = self.base.hp + 50
+        self.stats["strength"] += 7
+        self.stats["endurance"] += 7
+        self.stats["intelligence"] -= 3
+        self.stats["luck"] += 7
+            
+
+class Blessing(Effect):
+    
+    def apply_effect(self):
+        self.stats["strength"] += 2
+        self.stats["endurance"] += 2
+        self.stats["intelligence"] += 2
+        self.stats["luck"] += 2
+        
+        
+class Weakness(Effect):
+    
+    def apply_effect(self):
+        self.stats["strength"] -= 4
+        self.stats["endurance"] -= 4
+        self.stats["luck"] += 10

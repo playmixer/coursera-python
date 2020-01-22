@@ -48,11 +48,10 @@ class GameSurface(ScreenHandle):
     def draw_map(self):
 
         # FIXME || calculate (min_x,min_y) - left top corner
+        
+        min_x, min_y = self.calculate()
 
-        min_x = 0
-        min_y = 0
-
-    ##
+        ##
 
         if self.game_engine.map:
             for i in range(len(self.game_engine.map[0]) - min_x):
@@ -63,36 +62,47 @@ class GameSurface(ScreenHandle):
 
     def draw_object(self, sprite, coord):
         size = self.game_engine.sprite_size
-    # FIXME || calculate (min_x,min_y) - left top corner
+        # FIXME || calculate (min_x,min_y) - left top corner
 
-        min_x = 0
-        min_y = 0
+        min_x, min_y = self.calculate()
 
-    ##
+        ##
         self.blit(sprite, ((coord[0] - min_x) * self.game_engine.sprite_size,
                            (coord[1] - min_y) * self.game_engine.sprite_size))
 
     def draw(self, canvas):
         size = self.game_engine.sprite_size
-    # FIXME || calculate (min_x,min_y) - left top corner
+        # FIXME || calculate (min_x,min_y) - left top corner
+    
+        min_x, min_y = self.calculate()
 
-        min_x = 0
-        min_y = 0
-
-    ##
+        ##
         self.draw_map()
-        # print('='*50)
-        # for obj in self.game_engine.objects:
-        #     print(obj)
-        #     print(obj.sprite)
-        # print('='*50)
+        
         for obj in self.game_engine.objects:
             self.blit(obj.sprite[0], ((obj.position[0] - min_x) * self.game_engine.sprite_size,
                                       (obj.position[1] - min_y) * self.game_engine.sprite_size))
+            
         self.draw_hero()
 
-    # draw next surface in chain
+        # draw next surface in chain
         super().draw(canvas)
+        
+    def calculate(self):
+        min_x, min_y = 0, 0
+        screen_size = self.get_size()
+        map_size = (
+            screen_size[0] / self.game_engine.sprite_size,
+            screen_size[1] / self.game_engine.sprite_size
+        )
+        hero_pos = self.game_engine.hero.position
+        
+        min_x = int(hero_pos[0] - map_size[0] + (map_size[0] / 2)) 
+        min_x = min_x if min_x > 0 else 0
+        min_y = int(hero_pos[1] - map_size[1] + (map_size[1] / 2))
+        min_y = min_y if min_y > 0 else 0
+        
+        return min_x, min_y
 
 
 class ProgressBar(ScreenHandle):
@@ -189,6 +199,8 @@ class InfoWindow(ScreenHandle):
     def connect_engine(self, engine):
         # FIXME set this class as Observer to engine and send it to next in
         # chain
+        self.engine = engine
+        engine.subscribe(self)
         super().connect_engine(engine)
 
 
