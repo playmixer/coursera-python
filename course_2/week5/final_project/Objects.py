@@ -150,8 +150,9 @@ class Enemy(Creature, Interactive):
         self.hp = self.max_hp
     
     def interact(self, engine, hero):
-        hit = random.getrandbits(1)
-        if hit < 0:
+        luck = self.stats['luck'] - hero.stats['luck']
+        hit = random.getrandbits(max(1, int(luck)))
+        if hit:
             hero.hp -= self.stats["strength"]
         if hero.hp <= 0:
             engine.notify("GG")
@@ -188,4 +189,3 @@ class Weakness(Effect):
     def apply_effect(self):
         self.stats["strength"] -= 4
         self.stats["endurance"] -= 4
-        self.stats["luck"] += 10

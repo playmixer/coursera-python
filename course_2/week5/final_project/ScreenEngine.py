@@ -176,7 +176,7 @@ class InfoWindow(ScreenHandle):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.len = 30
+        self.len = 23
         clear = []
         self.data = collections.deque(clear, maxlen=self.len)
 
@@ -224,6 +224,7 @@ class HelpWindow(ScreenHandle):
     def connect_engine(self, engine):
         # FIXME save engine and send it to next in chain
         self.engine = engine
+        super().connect_engine(engine)
 
     def draw(self, canvas):
         alpha = 0
@@ -243,4 +244,35 @@ class HelpWindow(ScreenHandle):
                           (150, 50 + 30 * i))
     # FIXME
     # draw next surface in chain
+        super().draw(canvas)
+        
+        
+class MiniMap(ScreenHandle):
+    
+    def __init__(self, *args, **kwargs):
+        clear = []
+        self.size = args[0]
+        super().__init__(*args, **kwargs)
+
+    def connect_engine(self, engine):
+        self.engine = engine
+        super().connect_engine(engine)
+    
+    def draw(self, canvas):      
+        _long = max(len(self.engine.map), len(self.engine.map[0]))
+        sprite_w = self.size[0] / _long
+        sprite_h = self.size[1] / _long
+        width = len(self.engine.map[0]) / _long * self.size[0]
+        height = len(self.engine.map) / _long * self.size[1]
+        left = (self.size[0] - width) / 2
+        top = (self.size[1] - height) / 2
+        
+        pygame.draw.rect(self, colors['wooden'], ((0, 0), self.size))
+        pygame.draw.rect(self, colors['black'], ((left, top), (width, height)))
+        
+        x, y = self.engine.hero.position
+        x = x * sprite_w + left
+        y = y * sprite_h + top
+        pygame.draw.rect(self, colors['white'], ((x, y), (sprite_w, sprite_h)))
+        
         super().draw(canvas)
