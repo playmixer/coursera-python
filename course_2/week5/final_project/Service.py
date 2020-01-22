@@ -34,6 +34,12 @@ def restore_hp(engine, hero):
     engine.score += 0.1
     hero.hp = hero.max_hp
     engine.notify("HP restored")
+    
+
+def imortal(engine, hero):
+    engine.score += 0.3
+    engine.hero = Objects.Drink(hero)
+    engine.notify("Pseudo imortal")
 
 
 def apply_blessing(engine, hero):
@@ -382,7 +388,8 @@ def service_init(sprite_size, full=True):
                            'add_gold': add_gold,
                            'apply_blessing': apply_blessing,
                            'remove_effect': remove_effect,
-                           'restore_hp': restore_hp}
+                           'restore_hp': restore_hp,
+                           'imortal': imortal}
 
     for obj in object_list_prob['objects']:
         prop = object_list_prob['objects'][obj]

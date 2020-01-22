@@ -25,6 +25,11 @@ ally:
     action: restore_hp
     min-count: 0
     max-count: 3
+  drink:
+    sprite: [drink.png]
+    action: imortal
+    min-count: 1
+    max-count: 1
 enemies:
   rat:
     sprite: [rat.png]
@@ -54,3 +59,10 @@ enemies:
     intelligence: 50
     luck: 5
     experience: 1000
+  politician:
+    sprite: [poll.png]
+    strength: 100
+    endurance: 2
+    intelligence: 25
+    luck: 50
+    experience: 5000

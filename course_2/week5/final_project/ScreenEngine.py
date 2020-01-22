@@ -269,6 +269,7 @@ class MiniMap(ScreenHandle):
         
         pygame.draw.rect(self, colors['wooden'], ((0, 0), self.size))
         pygame.draw.rect(self, colors['black'], ((left, top), (width, height)))
+        pygame.draw.rect(self, colors['red'], ((left, top), (width, height)), int(sprite_w * 2))
         
         x, y = self.engine.hero.position
         x = x * sprite_w + left

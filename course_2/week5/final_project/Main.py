@@ -109,7 +109,6 @@ while engine.working:
             move = actions[np.argmax(answer)]()
             state = pygame.surfarray.array3d(gameDisplay)
             reward = engine.score - prev_score
-            print(reward)
         else:
             create_game()
 

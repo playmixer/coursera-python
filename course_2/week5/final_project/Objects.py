@@ -189,3 +189,10 @@ class Weakness(Effect):
     def apply_effect(self):
         self.stats["strength"] -= 4
         self.stats["endurance"] -= 4
+        
+        
+class Drink(Effect):
+    
+    def apply_effect(self):
+        self.hp *= 2
+        self.stats['luck'] -= 20
