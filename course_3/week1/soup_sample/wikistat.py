@@ -71,10 +71,25 @@ def parse(start, end, path):
         body = soup.find(id="bodyContent")
 
         # TODO посчитать реальные значения
-        imgs = len([img for img in body.find_all('img', width=True) if int(img['width']) >= 200]) # Количество картинок (img) с шириной (width) не меньше 200
-        h_re = re.compile(r"h[1-7]")
-        headers = len(body.find_all(name=['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], string=re.compile(r"^[E, T, C]"))) #10  # Количество заголовков, первая буква текста внутри которого: E, T или C
-        linkslen = 15  # Длина максимальной последовательности ссылок, между которыми нет других тегов
+        imgs = len([img for img in body.find_all('img', width=True) 
+                        if int(img['width']) >= 200]) # Количество картинок (img) с шириной (width) не меньше 200
+        headers = len([h for h in body.find_all(name=['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+                        if str(h.string)[0] in ['E', 'T', 'C']]) #10  # Количество заголовков, первая буква текста внутри которого: E, T или C
+        
+        tag = body.find('a')
+        max_link_con = 0
+        count = 0
+        while not tag is None:
+            print(tag.name)
+            if tag.name == 'a':
+                count += 1
+                if count > max_link_con:
+                    max_link_con = count
+            else:
+                count = 0
+            tag = tag.find_next_sibling()            
+                
+        linkslen = max_link_con  # Длина максимальной последовательности ссылок, между которыми нет других тегов
         lists = 20  # Количество списков, не вложенных в другие списки
 
         out[file] = [imgs, headers, linkslen, lists]
