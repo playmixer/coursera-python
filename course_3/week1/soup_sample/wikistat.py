@@ -73,8 +73,17 @@ def parse(start, end, path):
         # TODO посчитать реальные значения
         imgs = len([img for img in body.find_all('img', width=True) 
                         if int(img['width']) >= 200]) # Количество картинок (img) с шириной (width) не меньше 200
-        headers = len([h for h in body.find_all(name=['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
-                        if str(h.string)[0] in ['E', 'T', 'C']]) #10  # Количество заголовков, первая буква текста внутри которого: E, T или C
+        
+        count_header = 0
+        for h in body.find_all(name=['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):            
+            if str(h.string)[0] in ['E', 'T', 'C']:
+                count_header += 1
+            elif h.string is None:
+                for child in h.children:
+                    if not child is None:
+                        if child.string[0] in ['E', 'T', 'C']:
+                            count_header += 1
+        headers = len([h ]) #10  # Количество заголовков, первая буква текста внутри которого: E, T или C
         
         tag = body.find('a')
         max_link_con = 0
