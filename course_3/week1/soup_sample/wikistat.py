@@ -82,32 +82,39 @@ def parse(start, end, path):
                     if head.contents[i].string[0] in ['E', 'T', 'C']:
                     # if not re.search(r"^[E,T,C]", head.contents[i].string) is None:
                         count_header += 1
+                        break
 
         headers = count_header #10  # Количество заголовков, первая буква текста внутри которого: E, T или C
         
         tags_a = body.find_all('a')
         max_link_con = 0
         for i in range(len(tags_a)):
-            t = tags_a[i]
-            count = 0
-            while t:
-                print(t.name)
-                if t.name == 'a':
+            t = tags_a[i].find_next_siblings()
+            count = 1
+            for tag in t:
+                if tag.name == 'a':
                     count += 1
-                    if count > max_link_con:
-                        max_link_con = count
-                t = t.find_next_sibling()  
+                    max_link_con = max(count,max_link_con)
+                else:
+                    count = 0
                 
         linkslen = max_link_con  # Длина максимальной последовательности ссылок, между которыми нет других тегов
-        lists = 20  # Количество списков, не вложенных в другие списки
+        
+        lists = body.find_all(['ol','ul'])
+        count_not_nested_list = 0
+        for lst in lists:
+            if lst.find_parent('li') is None:
+                count_not_nested_list += 1
+        
+        lists = count_not_nested_list  # Количество списков, не вложенных в другие списки
 
         out[file] = [imgs, headers, linkslen, lists]
     return out
 
 
-if __name__ == "__main__":
-    start = 'Stone_Age'
-    end = 'Python_(programming_language)'
-    path = './wiki/'
-    res = parse(start, end, path)
-    print(res)
+# if __name__ == "__main__":
+#     start = 'Stone_Age'
+#     end = 'Python_(programming_language)'
+#     path = './wiki/'
+#     res = parse(start, end, path)
+#     print(res)
