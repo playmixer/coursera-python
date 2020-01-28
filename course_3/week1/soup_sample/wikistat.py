@@ -75,34 +75,33 @@ def parse(start, end, path):
                         if int(img['width']) >= 200]) # Количество картинок (img) с шириной (width) не меньше 200
         
         count_header = 0
-        for h in body.find_all(name=['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):            
-            if str(h.string)[0] in ['E', 'T', 'C']:
-                count_header += 1
-            elif h.string is None:
-                for child in h.children:
-                    if not child is None:
-                        if child.string[0] in ['E', 'T', 'C']:
-                            count_header += 1
-        headers = len([h ]) #10  # Количество заголовков, первая буква текста внутри которого: E, T или C
+        heads = body.find_all(name=['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+        for head in heads:
+            for i in range(len(head.contents)):
+                if not head.contents[i].string is None:
+                    if head.contents[i].string[0] in ['E', 'T', 'C']:
+                    # if not re.search(r"^[E,T,C]", head.contents[i].string) is None:
+                        count_header += 1
+
+        headers = count_header #10  # Количество заголовков, первая буква текста внутри которого: E, T или C
         
-        tag = body.find('a')
+        tags_a = body.find_all('a')
         max_link_con = 0
-        count = 0
-        while not tag is None:
-            print(tag.name)
-            if tag.name == 'a':
-                count += 1
-                if count > max_link_con:
-                    max_link_con = count
-            else:
-                count = 0
-            tag = tag.find_next_sibling()            
+        for i in range(len(tags_a)):
+            t = tags_a[i]
+            count = 0
+            while t:
+                print(t.name)
+                if t.name == 'a':
+                    count += 1
+                    if count > max_link_con:
+                        max_link_con = count
+                t = t.find_next_sibling()  
                 
         linkslen = max_link_con  # Длина максимальной последовательности ссылок, между которыми нет других тегов
         lists = 20  # Количество списков, не вложенных в другие списки
 
         out[file] = [imgs, headers, linkslen, lists]
-
     return out
 
 
