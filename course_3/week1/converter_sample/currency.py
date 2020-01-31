@@ -4,10 +4,13 @@ from decimal import Decimal
 
 def convert(amount, cur_from, cur_to, date, requests):
     def get_cur(cur, soup):
+        if cur == "RUR":
+            return Decimal('1.0000'), Decimal('1')
         soup = soup.find("CharCode", string=cur)
-        value = soup.parent.Value.string
-        nominal = soup.parent.Nominal.string
-        return value, nominal
+        value = soup.parent.Value.string.replace(',','.')
+        nominal = soup.parent.Nominal.string.replace(',','.')
+
+        return Decimal(value), Decimal(nominal)
 
     response = requests.get('https://www.cbr.ru/scripts/XML_daily.asp',
                     params = {
@@ -15,13 +18,12 @@ def convert(amount, cur_from, cur_to, date, requests):
                         })  # Использовать переданный requests
     # print(response.text)
     soup = BeautifulSoup(response.content, "xml")
-    print(cur_from)
     from_cur = get_cur(cur_from, soup)
-    rur_cur = get_cur("RUR", soup)
+    # rur_cur = get_cur("RUR", soup)
     to_cur = get_cur(cur_to, soup)
-    print()
     
-    result = Decimal('3754.8057')
+    res = (amount * (from_cur[0] / from_cur[1])) / (to_cur[0] / to_cur[1])
+    result = res.quantize(Decimal('0.0001'))
     return result  # не забыть про округление до 4х знаков после запятой
 
 
