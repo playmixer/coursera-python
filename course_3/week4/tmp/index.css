@@ -16,6 +16,7 @@
     padding-left: 10px;
     margin-bottom: 20px;
     padding-bottom: 10px;
+    border-bottom: 1px solid #eeeeee;
 }
 
 .question__rating, .question__content {
@@ -108,5 +109,6 @@ textarea {
 }
 
 .footer {
-    margin-top: 20px;
+    margin-top: 40px;
+    text-align: right;
 }
