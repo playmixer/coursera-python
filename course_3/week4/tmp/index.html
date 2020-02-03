@@ -7,11 +7,135 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <div class="container">
+        <div class="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">Stackoverflow</a>
 
-<div class="alert alert-primary" role="alert">Test</div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <form class="form-inline" style="width: 100%">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="width: 90%">
+                    </form>
+                </div>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary" href="#">Log in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="#">Sign up</a>
+                    </li>
+                </ul>
+            </nav>            
+            <div class="row">
+                <h4 class="question question__head">Django testing: Got an error creating the test database: database “database_name” already exists</h4>
+                <div class="question col-8">
+                    <div class="question question__post row">
+                        <div class="question__rating">
+                            <div class="avatar"><img src="https://www.gravatar.com/avatar/c8de58ffefc9d5009d749a512c5decbb?s=32&d=identicon&r=PG" width="32" height="32"></div>
+                            <div class="rating">
+                                <div class="rating__item rating__vote_up"><a class="rating__btn_up" onclick="vote_up(this)"><span class="triangle-up"></span></a></div>
+                                <div class="rating__item rating__value" value="4">4</div>
+                                <div class="rating__item rating__vote_down"><a class="rating__btn_down" onclick="vote_down(this)"><span class="triangle-down"></span></a></div>
+                            </div>
+                        </div>
+                        <div class="question__content">
+                            I have a problem with testing. It's my first time writing tests and I have a problem.
+                            <br>I just created a test folder inside my app users, and test_urls.py for testing the urls.
+                            <br>When I type:
+                            <br>python manage.py test users
+                            <br>
+                            <br>It says:
+                            <div class="question__docs">
+                                Creating test database for alias 'default'... Got an error creating the test database: database "database_name" already exists
+                                <br>Type 'yes' if you would like to try deleting the test database 'database_name', or 'no' to cancel:
+                            </div>
+                            What does it mean? What happens if I type yes? Do I lose all my data in database?
+                        </div>
+                    </div>
+                    <div class="block-hr"><h5>Answer</h5></div>
+                    <div class="question question__post row">
+                        <div class="question__rating">
+                            <div class="avatar"><img src="https://i.stack.imgur.com/mfJ7p.jpg?s=32&g=1" width="32" height="32"></div>
+                            <div class="rating">
+                                <div class="rating__item rating__vote_up"><a class="rating__btn_up" onclick="vote_up(this)"><span class="triangle-up"></span></a></div>
+                                <div class="rating__item rating__value" value="4">4</div>
+                                <div class="rating__item rating__vote_down"><a class="rating__btn_down" onclick="vote_down(this)"><span class="triangle-down"></span></a></div>
+                            </div>
+                        </div>
+                        <div class="question__content">
+                            When testing, Django creates a test database to work on so that your development database is not polluted. The error message says that Django is trying to create a test database named "database_name" and that this database already exists. You should check the tables of the database software you are using and check what is in database_name, it's probably been created by mistake.
+                            
+                            <br><br>If you type yes, the database database_name will be deleted and it is unlikely that you will be able to recover the data. So try to understand what is going on first.
+                            
+                            <br><br>You should set the name of the test database in settings.py. There is a specific TEST dictionary in the DATABASE settings for this:
+                            
+                            <br><div class="question__code">
+                                settings.py
+                                <br>...
+                                <br>DATABASES = {
+                                <br>     'default': {
+                                <br>        'ENGINE': 'django.db.backends.postgresql',
+                                <br>        'USER': 'mydatabaseuser',
+                                <br>        'NAME': 'mydatabase',
+                                <br>        'TEST': {
+                                <br>            'NAME': 'mytestdatabase',
+                                <br>        },
+                                <br>    },
+                                <br>}
+                                <br>...
+                            </div>
+                            <br>By default, the prefix test_ is added to the name of your development database. You should check your settings.py to check what is going on.
+                            <br>
+                            <br>From the docs:
+                            <br>
+                            <div class="question__docs">
+                                The default test database names are created by prepending test_ to the value of each NAME in DATABASES. When using SQLite, the tests will use an in-memory database by default (i.e., the database will be created in memory, bypassing the filesystem entirely!). The TEST dictionary in DATABASES offers a number of settings to configure your test database. For example, if you want to use a different database name, specify NAME in the TEST dictionary for any given database in DATABASES.
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="block-hr"><h5>Your Answer</h5></div>
+                    <div>
+                        <textarea></textarea>
+                        <button class="btn btn-primary">Post Your Answer</button>
+                    </div>
+                </div>
+                <div class="side-bar col-3">
+                    <div class="side-bar__item">
+                        <h4>Popular Tags</h4>                        
+                        <a href="#">python</a> <a href="#">django</a> <a href="#">database</a> <a href="#">postgresql</a>
+                    </div>
+                    <div class="side-bar__item">
+                        <h4>Best Members</h4>     
+                        <a href="#">Daniel Holmes</a>
+                        <br><a href="#">The Mir</a>
+                        <br><a href="#">Jacques Gaudin</a>
+                        <br><a href="#">Jone Smith</a>
+                        <br><a href="#">Neo</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer card-footer text-muted"></div>
+        </div>
+    </div>
+    
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script>
+        vote_up = function(btn) {
+            parent = btn.parentElement.parentElement;
+            value = parent.getElementsByClassName("rating__value")[0].innerText;
+            parent.getElementsByClassName("rating__value")[0].innerText = Number(value) + 1;
+            console.log(value)
+        }
+
+        vote_down = function(btn) {
+            parent = btn.parentElement.parentElement;
+            value = parent.getElementsByClassName("rating__value")[0].innerText;
+            parent.getElementsByClassName("rating__value")[0].innerText = Number(value) - 1;
+        }
+
+    </script>
 </body>
 </html>
