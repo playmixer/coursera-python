@@ -14,7 +14,7 @@ import json
 
 
 class SchemaAddItemView(Schema):
-    title = fields.Str(validate=Length(1, 64))
+    title = fields.Str(validate=Length(1, 64), requires=True)
     description = fields.Str(validate=Length(1, 1024))
     price = fields.Int(validate=Range(1, 1000000))    
     
