@@ -70,8 +70,8 @@ class PostReviewView(View):
             data = schema.load(document)
             text = data[0]['text']
             grade = data[0]['grade']            
-            review = Review.objects.create(item=Item.objects.get(id=item_id), text=text, grade=grade)
-            return JsonResponse({'id': 1}, status=201, safe=False)
+            review = Review.objects.create(item=item, text=text, grade=grade)
+            return JsonResponse({'id': review.id}, status=201, safe=False)
         
         except json.JSONDecodeError:
             return JsonResponse({'errors': 'invalid JSON'}, status=400)
@@ -96,12 +96,13 @@ class GetItemView(View):
             return JsonResponse({'error': 'Товар с таким id не существует'}, status=404)        
         
         try:
-            reviews = Review.objects.filter(item=item).order_by('-id')[:5]
+            reviews = Review.objects.filter(item=item).order_by('-id')[0:5]
+            print(reviews)
             data = []
-            for review in reviews:
-                data.append({'id': review.id, 'text': review.text, 'grade': review.grade})
-            
+            for i in range(len(reviews)):
+                data.append({'id': reviews[i].id, 'text': reviews[i].text, 'grade': reviews[i].grade})
+            print(data)
             return JsonResponse({'id': item.id, 'title': item.title, 'description': item.description, 'price': item.price, 'reviews': data}, status=200)
         except Exception as er:
-            return JsonResponse({'errors': 'ERROR'}, status=400)
+            return JsonResponse({'errors': er}, status=400)
             
