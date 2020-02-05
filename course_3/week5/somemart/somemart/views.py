@@ -10,8 +10,9 @@ from marshmallow import Schema, fields
 from marshmallow.validate import Length, Range
 from marshmallow import ValidationError
 
-import json
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate
+import base64
 
 class SchemaAddItemView(Schema):
     title = fields.Str(validate=Length(1, 64), requires=True)
@@ -29,7 +30,21 @@ class AddItemView(View):
     """View для создания товара."""
 
     def post(self, request):
-        # Здесь должен быть ваш код
+        auth_part = request.META.get('HTTP_AUTHORIZATION', b'').split()
+        if auth_part == []:
+            return JsonResponse({'erros': 'not authentication'}, status=401, safe=False)
+        
+        try:
+            print(auth_part)
+            username, password = base64.b64decode(auth_part[1].encode()).decode('utf-8').split(':')
+            user = authenticate(username=username, password=password)
+        except Exception as err:
+            print(err)
+        if user.is_active is None:    
+            return JsonResponse({'erros': 'not authentication'}, status=401, safe=False)
+        if not user.is_staff:
+            return JsonResponse({'erros': 'not access'}, status=403, safe=False)            
+    
         try:
             document = json.loads(request.body)
             schema = SchemaAddItemView(strict=True)
