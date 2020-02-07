@@ -15,6 +15,7 @@
             min-width: 300px;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-light bg-light">
@@ -44,15 +45,22 @@
                 <div class="card-header">
                     Текущие значения
                 </div>
-
                 <div class="card-body">
-                    {% for key, value in data.items %}
-                        <div class="row">
-                            <div class="col-sm">
-                                <strong>{{ key }}</strong>
+                    <div class="row">
+                        <div class="col-sm">
+                            <strong>Status</strong>
+                        </div>
+                        <div id="status" class="col-sm">
+                            {{data.status}}
+                        </div>
+                    </div>
+                    {% for item in data.data %}
+                        <div class='row'>
+                            <div class='col-sm'>
+                                {{item.name}}
                             </div>
-                            <div class="col-sm">
-                                {{ value }}
+                            <div class='col-sm'>
+                                {{item.value}}
                             </div>
                         </div>
                     {% endfor %}

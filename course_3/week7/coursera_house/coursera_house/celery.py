@@ -1,4 +1,3 @@
-from __future__ import absolute_import, unicode_literals
 import os
 import django
 from celery import Celery
@@ -8,11 +7,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'coursera_house.settings')
 django.setup()
 
 
-app = Celery('proj')
+from coursera_house.core.tasks import smart_home_manager
+
+
+app = Celery('coursera_house')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
-from coursera_house.core.tasks import smart_home_manager
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):

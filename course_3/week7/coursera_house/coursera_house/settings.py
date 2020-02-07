@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'coursera_house.core',
+    'coursera_house.core'
 ]
 
 MIDDLEWARE = [
@@ -119,11 +118,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-SMART_HOME_ACCESS_TOKEN = os.getenv('SMART_HOME_ACCESS_TOKEN')
+SMART_HOME_ACCESS_TOKEN = os.getenv('SMART_HOME_ACCESS_TOKEN',
+                                    "d0f01749ff1010068904ed65cc47b777f9312ceb5b2c7ffa0e5c121b420dc90e")
 SMART_HOME_API_URL = os.getenv('SMART_HOME_API_URL', 'https://smarthome.webpython.graders.eldf.ru/api/user.controller')
-EMAIL_HOST  = os.getenv('EMAIL_HOST', 'EMAIL_HOST')
-EMAIL_PORT  = os.getenv('EMAIL_PORT', 'EMAIL_PORT')
-EMAIL_RECEPIENT  = os.getenv('EMAIL_RECEPIENT', 'EMAIL_RECEPIENT')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 'EMAIL_HOST')
+EMAIL_RECEPIENT = os.getenv('EMAIL_RECEPIENT', 'EMAIL_RECEPIENT')
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
