@@ -1,4 +1,6 @@
 # coursera-python
 
-#apps
-  #game: Knight - https://github.com/playmixer/coursera-python/tree/master/course_2/week5/final_project
+#### apps:
+* [game: Knight](course_2/week5/final_project)
+* [bot](course_3/week6/bot/find-location)
+* [smart home](course_3/week7/coursera_house)
